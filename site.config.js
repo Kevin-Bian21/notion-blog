@@ -8,7 +8,7 @@ export default {
 
   // basic site info (required)
   name: 'Kevin Blog',
-  domain: 'bwk.vercel.app',
+  domain: 'bianwenkai.cn',
   // domain: 'codingmaster.top',
   author: 'BianWenKai',
 
