@@ -9,7 +9,6 @@ export default {
   // basic site info (required)
   name: 'Kevin Blog',
   domain: 'bianwenkai.cn',
-  // domain: 'codingmaster.top',
   author: 'BianWenKai',
 
   // open graph metadata (optional)
@@ -26,7 +25,7 @@ export default {
   defaultPageCover: null,
   defaultPageCoverPosition: 0.5,
 
-  utterancesGitHubRepo: 'Kevin-Bian21/notion-blog',
+  //utterancesGitHubRepo: 'Kevin-Bian21/notion-blog',
   // whether or not to enable support for LQIP preview images (optional)
   isPreviewImageSupportEnabled: true,
 
