@@ -208,6 +208,7 @@ export const NotionPage: React.FC<types.PageProps> = ({
         mapPageUrl={siteMapPageUrl}
         mapImageUrl={mapImageUrl}
         searchNotion={searchNotion}
+        pageFooter={comments}
         pageAside={pageAside}
         footer={
           <Footer
