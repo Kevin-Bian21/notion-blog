@@ -19,6 +19,10 @@ body {
   overflow-x: hidden;
 }
 
+.utterances {
+  max-width: 100% !important;
+}
+
 .static-tweet blockquote {
   margin: 0;
   margin-block-start: 0;
