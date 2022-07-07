@@ -40,7 +40,7 @@ export const Footer: React.FC<{
           <a href='https://hits.seeyoufarm.com'>
             <img
               style={{ display: 'block', margin: '0px auto' }}
-              src='https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fhmdev.vercel.app&count_bg=%2379C83D&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=Total hits&edge_flat=true'
+              src='https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fwww.bianwenkai.cn&count_bg=%2379C83D&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=hits&edge_flat=true'
             />
           </a>
           <div>Copyright 2021 {config.author} </div>
