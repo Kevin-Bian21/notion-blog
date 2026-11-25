@@ -1,6 +1,7 @@
-import { parsePageId, getPageTitle } from 'notion-utils'
-import { getPage } from './notion'
+import { getBlockValue, getPageTitle, parsePageId } from 'notion-utils'
+
 import * as config from './config'
+import { getPage } from './notion'
 
 export const oembed = async ({
   url,
@@ -14,7 +15,7 @@ export const oembed = async ({
   dark?: boolean
 }) => {
   // TODO: handle pages with no pageId via domain
-  const pageId = parsePageId(url)
+  const pageId = parsePageId(url)!
 
   let title = config.name
   let authorName = config.author
@@ -25,8 +26,10 @@ export const oembed = async ({
   const pageTitle = getPageTitle(page)
   if (pageTitle) title = pageTitle
 
-  const user = page.notion_user[Object.keys(page.notion_user)[0]]?.value
-  const name = [user.given_name, user.family_name]
+  const user = getBlockValue(
+    page.notion_user[Object.keys(page.notion_user)[0]!]
+  )
+  const name = [user?.given_name, user?.family_name]
     .filter(Boolean)
     .join(' ')
     .trim()

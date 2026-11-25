@@ -1,7 +1,7 @@
-import { ExtendedRecordMap } from 'notion-types'
+import { type ExtendedRecordMap } from 'notion-types'
 import {
-  parsePageId,
-  getCanonicalPageId as getCanonicalPageIdImpl
+  getCanonicalPageId as getCanonicalPageIdImpl,
+  parsePageId
 } from 'notion-utils'
 
 import { inversePageUrlOverrides } from './config'
@@ -10,18 +10,20 @@ export function getCanonicalPageId(
   pageId: string,
   recordMap: ExtendedRecordMap,
   { uuid = true }: { uuid?: boolean } = {}
-): string | null {
+): string | undefined {
   const cleanPageId = parsePageId(pageId, { uuid: false })
   if (!cleanPageId) {
-    return null
+    return
   }
 
   const override = inversePageUrlOverrides[cleanPageId]
   if (override) {
     return override
   } else {
-    return getCanonicalPageIdImpl(pageId, recordMap, {
-      uuid
-    })
+    return (
+      getCanonicalPageIdImpl(pageId, recordMap, {
+        uuid
+      }) ?? undefined
+    )
   }
 }

@@ -100,11 +100,32 @@
   border-color: #c9510c;
 }
 
+.gitee .actionBgPane {
+  background: #c71d23;
+}
+.gitee:hover {
+  border-color: #c71d23;
+}
+
+.youtube .actionBgPane {
+  background: #ff0000;
+}
+.youtube:hover {
+  border-color: #ff0000;
+}
+
 .medium .actionBgPane {
   background: #00ab6c;
 }
 .medium:hover {
   border-color: #00ab6c;
+}
+
+.newsletter .actionBgPane {
+  background: #777777;
+}
+.newsletter:hover {
+  border-color: #777777;
 }
 
 .email .actionBgPane {

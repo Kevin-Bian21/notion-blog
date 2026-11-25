@@ -1,4 +1,6 @@
-import React from 'react'
+'use client'
+
+import * as React from 'react'
 
 import styles from './styles.module.css'
 
@@ -19,7 +21,7 @@ export type Theme =
   | 'dark-blue'
   | 'photon-dark'
 
-interface ReactUtterancesProps {
+export interface ReactUtterancesProps {
   repo: string
   issueMap: MappingType
   issueTerm?: string
@@ -28,83 +30,68 @@ interface ReactUtterancesProps {
   theme: Theme
 }
 
-interface ReactUtterancesState {
-  pending: boolean
-}
+export function ReactUtterances({
+  repo,
+  issueMap,
+  issueTerm,
+  issueNumber,
+  label,
+  theme
+}: ReactUtterancesProps) {
+  const containerRef = React.useRef<HTMLDivElement>(null)
+  // only the initial theme is used for the first injection; later changes
+  // are pushed to the existing iframe via postMessage
+  const initialThemeRef = React.useRef(theme)
+  const [pending, setPending] = React.useState(true)
 
-export class ReactUtterances extends React.Component<
-  ReactUtterancesProps,
-  ReactUtterancesState
-> {
-  reference: React.RefObject<HTMLDivElement>
-  scriptElement: any
+  React.useEffect(() => {
+    const container = containerRef.current
+    if (!container) return
 
-  constructor(props: ReactUtterancesProps) {
-    super(props)
+    // avoid injecting a duplicate utterances iframe on re-mounts
+    container.replaceChildren()
+    setPending(true)
 
-    if (props.issueMap === 'issue-term' && props.issueTerm === undefined) {
-      throw Error(
-        "Property 'issueTerm' must be provided with issueMap 'issue-term'"
-      )
-    }
-
-    if (props.issueMap === 'issue-number' && props.issueNumber === undefined) {
-      throw Error(
-        "Property 'issueNumber' must be provided with issueMap 'issue-number'"
-      )
-    }
-
-    this.reference = React.createRef<HTMLDivElement>()
-    this.state = { pending: true }
-  }
-
-  UNSAFE_componentWillReceiveProps(props) {
-    // this.scriptElement.setAttribute('theme', props.theme)
-    const iframe = document.querySelector('iframe.utterances-frame') as any
-
-    if (iframe) {
-      iframe.contentWindow.postMessage(
-        { type: 'set-theme', theme: props.theme },
-        'https://utteranc.es/'
-      )
-    }
-  }
-
-  componentDidMount(): void {
-    const { repo, issueMap, issueTerm, issueNumber, label, theme } = this.props
-    const scriptElement = document.createElement('script')
-    scriptElement.src = 'https://utteranc.es/client.js'
-    scriptElement.async = true
-    scriptElement.defer = true
-    scriptElement.setAttribute('repo', repo)
-    scriptElement.setAttribute('crossorigin', 'annonymous')
-    scriptElement.setAttribute('theme', theme)
-    scriptElement.onload = () => this.setState({ pending: false })
+    const script = document.createElement('script')
+    script.src = 'https://utteranc.es/client.js'
+    script.async = true
+    script.defer = true
+    script.crossOrigin = 'anonymous'
+    script.setAttribute('repo', repo)
+    script.setAttribute('theme', initialThemeRef.current)
 
     if (label) {
-      scriptElement.setAttribute('label', label)
+      script.setAttribute('label', label)
     }
 
     if (issueMap === 'issue-number') {
-      scriptElement.setAttribute('issue-number', issueNumber.toString())
+      script.setAttribute('issue-number', String(issueNumber))
     } else if (issueMap === 'issue-term') {
-      scriptElement.setAttribute('issue-term', issueTerm)
+      script.setAttribute('issue-term', issueTerm ?? 'title')
     } else {
-      scriptElement.setAttribute('issue-term', issueMap)
+      script.setAttribute('issue-term', issueMap)
     }
 
-    // TODO: Check current availability
-    this.scriptElement = scriptElement
-    this.reference.current.appendChild(scriptElement)
-  }
+    script.onload = () => setPending(false)
+    container.appendChild(script)
+  }, [repo, issueMap, issueTerm, issueNumber, label])
 
-  render(): React.ReactElement {
-    return (
-      <div className={styles.comments}>
-        <div className={styles.utterances} ref={this.reference}>
-          {this.state.pending && <p>Loading Comments...</p>}
-        </div>
-      </div>
+  React.useEffect(() => {
+    const iframe = document.querySelector(
+      'iframe.utterances-frame'
+    ) as HTMLIFrameElement | null
+
+    iframe?.contentWindow?.postMessage(
+      { type: 'set-theme', theme },
+      'https://utteranc.es/'
     )
-  }
+  }, [theme])
+
+  return (
+    <div className={styles.comments}>
+      {pending && <p>Loading Comments...</p>}
+
+      <div className={styles.utterances} ref={containerRef} />
+    </div>
+  )
 }

@@ -1,11 +1,9 @@
-import React from 'react'
-
 import styles from './styles.module.css'
 
-export const GitHubShareButton: React.FC = () => {
+export function GitHubShareButton() {
   return (
     <a
-      href='https://github.com/Kevin-Bian21/notion-blog'
+      href='https://github.com/transitive-bullshit/nextjs-notion-starter-kit'
       target='_blank'
       rel='noopener noreferrer'
       className={styles.githubCorner}

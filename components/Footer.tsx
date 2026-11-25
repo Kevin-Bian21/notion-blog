@@ -1,81 +1,74 @@
-import React from 'react'
-import { FaTwitter, FaZhihu, FaGithub, FaLinkedin } from 'react-icons/fa'
-import { IoSunnyOutline, IoMoonSharp } from 'react-icons/io5'
-import * as config from 'lib/config'
+import * as React from 'react'
+
+import * as config from '@/lib/config'
+import { GitHubIcon } from '@/lib/icons/github'
+import { LinkedInIcon } from '@/lib/icons/linkedin'
+import { MoonIcon } from '@/lib/icons/moon'
+import { SunIcon } from '@/lib/icons/sun'
+import { TwitterIcon } from '@/lib/icons/twitter'
+import { useDarkMode } from '@/lib/use-dark-mode'
 
 import styles from './styles.module.css'
 
-// TODO: merge the data and icons from PageSocial with the social links in Footer
+export function FooterImpl() {
+  const { hasMounted, isDarkMode, toggleDarkMode } = useDarkMode()
 
-export const Footer: React.FC<{
-  isDarkMode: boolean
-  toggleDarkMode: () => void
-}> = ({ isDarkMode, toggleDarkMode }) => {
-  const [hasMounted, setHasMounted] = React.useState(false)
-  const toggleDarkModeCb = React.useCallback(
-    (e) => {
+  // busuanzi (不蒜子) site page-view counter
+  // note: the script must not be removed on cleanup, otherwise its callback
+  // fails to remove its own script tag and hides the counter again
+  React.useEffect(() => {
+    if (document.getElementById('busuanzi-script')) return
+
+    const script = document.createElement('script')
+    script.id = 'busuanzi-script'
+    script.src =
+      'https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js'
+    script.async = true
+    document.body.appendChild(script)
+  }, [])
+
+  const onToggleDarkMode = React.useCallback(
+    (e: any) => {
       e.preventDefault()
       toggleDarkMode()
     },
     [toggleDarkMode]
   )
 
-  React.useEffect(() => {
-    setHasMounted(true)
-  }, [])
-
   return (
     <footer className={styles.footer}>
-        <div
-          style={{
-            justifyContent: 'center',
-            alignItems: 'center'
-          }}
-        >
-          <a href='https://hits.seeyoufarm.com'>
-            <img
-              style={{ display: 'block', margin: '0px auto' }}
-              src='https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fwww.bianwenkai.cn&count_bg=%2379C83D&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=hits&edge_flat=true'
-            />
-          </a>
-          <div className={styles.copyright}>Copyright 2021 {config.author}</div>
+      <div className={styles.copyrightGroup}>
+        <div id='busuanzi_container_site_pv' className={styles.busuanzi}>
+          本站总访问量 <span id='busuanzi_value_site_pv' /> 次
         </div>
 
-      {hasMounted ? (
-        <div className={styles.settings}>
+        <div className={styles.copyright}>Copyright 2021 {config.author}</div>
+      </div>
+
+      <div className={styles.settings}>
+        {hasMounted && (
           <a
             className={styles.toggleDarkMode}
             href='#'
-            onClick={toggleDarkModeCb}
+            role='button'
+            onClick={onToggleDarkMode}
             title='Toggle dark mode'
           >
-            {isDarkMode ? <IoMoonSharp /> : <IoSunnyOutline />}
+            {isDarkMode ? <MoonIcon /> : <SunIcon />}
           </a>
-        </div>
-      ) : null}
+        )}
+      </div>
 
       <div className={styles.social}>
         {config.twitter && (
           <a
             className={styles.twitter}
-            href={`https://twitter.com/${config.twitter}`}
-            title={`Twitter @${config.twitter}`}
+            href={`https://x.com/${config.twitter}`}
+            title={`X @${config.twitter}`}
             target='_blank'
             rel='noopener noreferrer'
           >
-            <FaTwitter />
-          </a>
-        )}
-
-        {config.zhihu && (
-          <a
-            className={styles.zhihu}
-            href={`https://zhihu.com/people/${config.zhihu}`}
-            title={`Zhihu @${config.zhihu}`}
-            target='_blank'
-            rel='noopener noreferrer'
-          >
-            <FaZhihu />
+            <TwitterIcon />
           </a>
         )}
 
@@ -87,7 +80,7 @@ export const Footer: React.FC<{
             target='_blank'
             rel='noopener noreferrer'
           >
-            <FaGithub />
+            <GitHubIcon />
           </a>
         )}
 
@@ -99,10 +92,12 @@ export const Footer: React.FC<{
             target='_blank'
             rel='noopener noreferrer'
           >
-            <FaLinkedin />
+            <LinkedInIcon />
           </a>
         )}
       </div>
     </footer>
   )
 }
+
+export const Footer = React.memo(FooterImpl)

@@ -1,33 +1,32 @@
-import React from 'react'
-import { IoHeartOutline } from 'react-icons/io5'
-import { AiOutlineRetweet } from 'react-icons/ai'
+import { LikeIcon } from '@/lib/icons/like'
+import { RetweetIcon } from '@/lib/icons/retweet'
 
 import styles from './styles.module.css'
 
 /**
  * @see https://developer.twitter.com/en/docs/twitter-for-websites/web-intents/overview
  */
-export const PageActions: React.FC<{ tweet: string }> = ({ tweet }) => {
+export function PageActions({ tweet }: { tweet: string }) {
   return (
     <div className={styles.pageActions}>
       <a
         className={styles.likeTweet}
-        href={`https://twitter.com/intent/like?tweet_id=${tweet}`}
+        href={`https://x.com/intent/like?tweet_id=${tweet}`}
         target='_blank'
         rel='noopener noreferrer'
         title='Like this post on Twitter'
       >
-        <IoHeartOutline />
+        <LikeIcon />
       </a>
 
       <a
         className={styles.retweet}
-        href={`https://twitter.com/intent/retweet?tweet_id=${tweet}`}
+        href={`https://x.com/intent/retweet?tweet_id=${tweet}`}
         target='_blank'
         rel='noopener noreferrer'
         title='Retweet this post on Twitter'
       >
-        <AiOutlineRetweet />
+        <RetweetIcon />
       </a>
     </div>
   )

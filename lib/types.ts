@@ -1,6 +1,8 @@
-import { ExtendedRecordMap, PageMap } from 'notion-types'
+import type { ExtendedRecordMap, PageMap } from 'notion-types'
 
 export * from 'notion-types'
+
+export type NavigationStyle = 'default' | 'custom'
 
 export interface PageError {
   message?: string
@@ -14,20 +16,16 @@ export interface PageProps {
   error?: PageError
 }
 
-export interface Model {
-  id: string
-  userId: string
-
-  createdAt: number
-  updatedAt: number
+export interface ExtendedTweetRecordMap extends ExtendedRecordMap {
+  tweets: Record<string, any>
 }
 
-export interface Site extends Model {
+export interface Site {
   name: string
   domain: string
 
   rootNotionPageId: string
-  rootNotionSpaceId: string
+  rootNotionSpaceId: string | null
 
   // settings
   html?: string
@@ -38,10 +36,6 @@ export interface Site extends Model {
   // opengraph metadata
   description?: string
   image?: string
-
-  timestamp: Date
-
-  isDisabled: boolean
 }
 
 export interface SiteMap {
@@ -66,19 +60,12 @@ export interface PageUrlOverridesInverseMap {
   [pageId: string]: string
 }
 
-export interface PreviewImage {
-  url: string
-  originalWidth: number
-  originalHeight: number
-  width: number
-  height: number
-  type: string
-  dataURIBase64: string
-
-  error?: string
-  statusCode?: number
-}
-
-export interface PreviewImageMap {
-  [url: string]: PreviewImage
+export interface NotionPageInfo {
+  pageId: string
+  title: string
+  image?: string
+  imageObjectPosition?: string
+  author?: string
+  authorImage?: string
+  detail?: string
 }
